@@ -194,7 +194,7 @@ namespace hiredispp
         size_t size() const
         {
             checkError();
-            
+
             if (T::get()->type != REDIS_REPLY_ARRAY)
             {
                 throw std::runtime_error("Invalid reply type");
@@ -479,7 +479,7 @@ namespace hiredispp
                 j = lines.find(RedisConst<CharT>::InfoCrLf, i);
 
                 size_t p = line.find(RedisConst<CharT>::InfoSeparator);
-                
+
                 if (p != std::basic_string<CharT>::npos &&
                     p < (line.size() - 1))
                 {
@@ -501,6 +501,32 @@ namespace hiredispp
         {
             beginPing();
             return endCommand().getStatus();
+        }
+
+        void beginSize() const
+        {
+            connect();
+
+            ::redisAppendCommand(_context, "DBSIZE");
+        }
+
+        boost::int64_t size() const
+        {
+            beginFlush();
+            return endCommand();
+        }
+
+        void beginFlush() const
+        {
+            connect();
+
+            ::redisAppendCommand(_context, "FLUSHDB");
+        }
+
+        void flush() const
+        {
+            beginFlush();
+            endCommand();
         }
 
         void beginSelect(int database) const
@@ -721,6 +747,30 @@ namespace hiredispp
             return endCommand();
         }
 
+        void beginHmget(const std::basic_string<CharT>& key, const std::vector<const std::basic_string<CharT> >& fields) const
+        {
+            connect();
+            beginCommand(Command("HMGET") << key << fields);
+        }
+
+        Reply hmget(const std::basic_string<CharT>& key, const std::vector<const std::basic_string<CharT> >& fields) const
+        {
+            beginHmget(key, fields);
+            return endCommand();
+        }
+
+        void beginHlen(const std::basic_string<CharT>& key) const
+        {
+            connect();
+            beginCommand(Command("HLEN") << key);
+        }
+
+        boost::int64_t hlen(const std::basic_string<CharT>& key) const
+        {
+            beginHlen(key);
+            return endCommand();
+        }
+
         void beginHdel(const std::basic_string<CharT>& key, const std::basic_string<CharT>& field) const
         {
             connect();
@@ -742,6 +792,23 @@ namespace hiredispp
         boost::int64_t hset(const std::basic_string<CharT>& key, const std::basic_string<CharT>& field, const std::basic_string<CharT>& value) const
         {
             beginHset(key, field, value);
+            return endCommand();
+        }
+
+        void beginHmset(const std::basic_string<CharT>& key, const std::vector<std::pair<std::basic_string<CharT>, std::basic_string<CharT> > >& values) const
+        {
+            connect();
+            Command cmd("HMSET");
+            cmd << key;
+            for (const auto& value : values) {
+              cmd << value[0] << value[1];
+            }
+            beginCommand(cmd);
+        }
+
+        boost::int64_t hmset(const std::basic_string<CharT>& key, const std::vector<std::pair<std::basic_string<CharT>, std::basic_string<CharT> > >& values) const
+        {
+            beginHmset(key, values);
             return endCommand();
         }
 
@@ -778,6 +845,30 @@ namespace hiredispp
         Reply hgetall(const std::basic_string<CharT>& key) const
         {
             beginHgetall(key);
+            return endCommand();
+        }
+
+        void beginHvals(const std::basic_string<CharT>& key) const
+        {
+            connect();
+            beginCommand(Command("HVALS") << key);
+        }
+
+        Reply hvals(const std::basic_string<CharT>& key) const
+        {
+            beginHvals(key);
+            return endCommand();
+        }
+
+        void beginHkeys(const std::basic_string<CharT>& key) const
+        {
+            connect();
+            beginCommand(Command("HKEYS") << key);
+        }
+
+        Reply hkeys(const std::basic_string<CharT>& key) const
+        {
+            beginHkeys(key);
             return endCommand();
         }
 
