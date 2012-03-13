@@ -85,6 +85,24 @@ namespace hiredispp
         static const std::basic_string<CharT> InfoCrLf;
     };
 
+    template<>
+    const std::basic_string<char> RedisConst<char>::Nil = "**NIL**";
+
+    template<>
+    const std::basic_string<wchar_t> RedisConst<wchar_t>::Nil = L"**NIL**";
+
+    template<>
+    const std::basic_string<char> RedisConst<char>::InfoSeparator = ":";
+
+    template<>
+    const std::basic_string<wchar_t> RedisConst<wchar_t>::InfoSeparator = L":";
+
+    template<>
+    const std::basic_string<char> RedisConst<char>::InfoCrLf = "\r\n";
+
+    template<>
+    const std::basic_string<wchar_t> RedisConst<wchar_t>::InfoCrLf = L"\r\n";
+
     template<class T, typename CharT>
     class RedisResult : public T
     {

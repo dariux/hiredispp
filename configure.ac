@@ -7,7 +7,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects dist-bzip2 dist-lzma])
 AM_SILENT_RULES([yes])
 LT_PREREQ([2.2])
 LT_INIT
-AC_CONFIG_SRCDIR([hiredispp.cpp])
+AC_CONFIG_SRCDIR([hiredispp.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 

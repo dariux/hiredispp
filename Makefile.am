@@ -28,9 +28,6 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 AM_CXXFLAGS = $(COVERAGE_CXXFLAGS)
 
-lib_LTLIBRARIES = \
-			libhiredispp.la 
-
 .PHONY: coverage
 
 ################################################################################
@@ -41,17 +38,8 @@ lib_LTLIBRARIES = \
 
 libhiredispp_includedir = $(includedir)/
 libhiredispp_include_HEADERS = \
-			hiredispp.h 
-
-libhiredispp_la_SOURCES = \
-			hiredispp.cpp 
-libhiredispp_la_CPPFLAGS = \
-			-I$(abs_top_srcdir)/ \
-			$(E_CFLAGS) \
-			$(CPPFLAGS)
-libhiredispp_la_LIBADD = \
-			$(E_LIBS) \
-			-lhiredis
+			hiredispp.h \
+			hiredispp-impl.h
 
 ##################################### Tests ####################################
 
