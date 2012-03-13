@@ -801,7 +801,7 @@ namespace hiredispp
             Command cmd("HMSET");
             cmd << key;
             for (const auto& value : values) {
-              cmd << value[0] << value[1];
+              cmd << value.first << value.second;
             }
             beginCommand(cmd);
         }
