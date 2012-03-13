@@ -753,7 +753,7 @@ namespace hiredispp
             beginCommand(Command("HMGET") << key << fields);
         }
 
-        Reply hmget(const std::basic_string<CharT>& key, const std::vector<const std::basic_string<CharT> >& fields) const
+        Reply hmget(const std::basic_string<CharT>& key, const std::vector<std::basic_string<CharT> >& fields) const
         {
             beginHmget(key, fields);
             return endCommand();
