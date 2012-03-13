@@ -17,6 +17,10 @@
 
 namespace hiredispp
 {
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define throw_line(msg) throw std::runtime_error("error:" #msg " at " __FILE__ ":" TOSTRING(__LINE__))
+
     template<typename CharT>
     class RedisEncoding
     {
@@ -135,7 +139,7 @@ namespace hiredispp
 
             if (T::get()->type != REDIS_REPLY_STATUS)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             return getString();
@@ -149,7 +153,7 @@ namespace hiredispp
                     T::get()->type != REDIS_REPLY_STRING &&
                     T::get()->type != REDIS_REPLY_NIL)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             if (isNil())
@@ -166,7 +170,7 @@ namespace hiredispp
 
             if (T::get()->type != REDIS_REPLY_INTEGER)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             return T::get()->integer;
@@ -180,7 +184,7 @@ namespace hiredispp
                     T::get()->type != REDIS_REPLY_INTEGER &&
                     T::get()->type != REDIS_REPLY_NIL)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             if (isNil())
@@ -197,7 +201,7 @@ namespace hiredispp
 
             if (T::get()->type != REDIS_REPLY_ARRAY)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             return T::get()->elements;
@@ -209,12 +213,12 @@ namespace hiredispp
 
             if (T::get()->type != REDIS_REPLY_ARRAY)
             {
-                throw std::runtime_error("Invalid reply type");
+                throw_line("Invalid reply type");
             }
 
             if (i >= T::get()->elements)
             {
-                throw std::runtime_error("Out of range");
+                throw_line("Out of range");
             }
 
             return RedisResult<RedisElementBase, CharT>(T::get()->element[i]);
@@ -512,7 +516,7 @@ namespace hiredispp
 
         boost::int64_t size() const
         {
-            beginFlush();
+            beginSize();
             return endCommand();
         }
 
