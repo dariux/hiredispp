@@ -810,10 +810,10 @@ namespace hiredispp
             beginCommand(cmd);
         }
 
-        boost::int64_t hmset(const std::basic_string<CharT>& key, const std::vector<std::pair<std::basic_string<CharT>, std::basic_string<CharT> > >& values) const
+        std::basic_string<CharT> hmset(const std::basic_string<CharT>& key, const std::vector<std::pair<std::basic_string<CharT>, std::basic_string<CharT> > >& values) const
         {
             beginHmset(key, values);
-            return endCommand();
+            return endCommand().getStatus();
         }
 
         void beginHsetnx(const std::basic_string<CharT>& key, const std::basic_string<CharT>& field, const std::basic_string<CharT>& value) const
