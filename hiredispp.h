@@ -430,7 +430,6 @@ namespace hiredispp
             if (_context != 0)
             {
                 ::redisFree(_context);
-
                 _context = 0;
             }
         }
@@ -458,7 +457,6 @@ namespace hiredispp
         void beginInfo() const
         {
             connect();
-
             ::redisAppendCommand(_context, "INFO");
         }
 
@@ -493,7 +491,6 @@ namespace hiredispp
         void beginPing() const
         {
             connect();
-
             ::redisAppendCommand(_context, "PING");
         }
 
@@ -506,7 +503,6 @@ namespace hiredispp
         void beginSize() const
         {
             connect();
-
             ::redisAppendCommand(_context, "DBSIZE");
         }
 
@@ -532,7 +528,6 @@ namespace hiredispp
         void beginSelect(int database) const
         {
             connect();
-
             ::redisAppendCommand(_context, "SELECT %d", database);
         }
 
@@ -845,6 +840,49 @@ namespace hiredispp
         Reply hgetall(const std::basic_string<CharT>& key) const
         {
             beginHgetall(key);
+            return endCommand();
+        }
+
+        void beginEval(const std::basic_string<CharT>& script, const std::vector<std::basic_string<CharT> >& keys, 
+                       const std::vector<std::basic_string<CharT> >& args, bool evalsha) const
+        {
+            connect();
+            Command c;
+            if (evalsha)
+                c << "EVALSHA";
+            else
+                c << "EVAL";
+            c << script << keys.size() << keys << args;
+            beginCommand(c);
+        }
+
+        Reply eval(const std::basic_string<CharT>& script, const std::vector<std::basic_string<CharT> >& keys, const std::vector<std::basic_string<CharT> >& args) const
+        {
+            bool evalsha = false;
+            beginEval(script, keys, args, evalsha);
+            return endCommand();
+        }
+
+        Reply eval(const std::basic_string<CharT>& script, const std::vector<std::basic_string<CharT> >& keys) const
+        {   
+            bool evalsha = false;
+            std::vector<std::basic_string<CharT> > args;  // empty
+            beginEval(script, keys, args, evalsha);
+            return endCommand();
+        }
+
+        Reply evalsha(const std::basic_string<CharT>& script, const std::vector<std::basic_string<CharT> >& keys, const std::vector<std::basic_string<CharT> >& args) const
+        {
+            bool evalsha = true;
+            beginEval(script, keys, args, evalsha);
+            return endCommand();
+        }
+
+        Reply evalsha(const std::basic_string<CharT>& script, const std::vector<std::basic_string<CharT> >& keys) const
+        {   
+            bool evalsha = true;
+            std::vector<std::basic_string<CharT> > args;  // empty
+            beginEval(script, keys, args, evalsha);
             return endCommand();
         }
 

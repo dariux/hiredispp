@@ -30,7 +30,7 @@ It is possible to issue dynamically created commands with hiredispp::Redis::Comm
 	std::vector<std::string> keys;
 	hiredispp::Redis::Command sunionstore("SUNIONSTORE");
 	sunionstore << "result" << keys;
-	r.execute(sunionstore);
+	r.doCommand(sunionstore);
 
 Pipelining
 ----------
@@ -55,7 +55,7 @@ Also it possible to pipeline dynamic commands by executing vector of hiredispp::
 		commands.push_back(hiredispp::Redis::Command("SADD") << key << member);
 	}
 	std::vector<hiredispp::Redis::Reply> replies;
-	r.execute(commands, replies);
+	r.doCommand(commands, replies);
 
 Exceptions
 ----------
